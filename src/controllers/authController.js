@@ -4,7 +4,7 @@ const Joi = require('joi');
 const { db } = require('../config/firestore');
 
 // Endpoint untuk Registrasi
-const registerHandler = async (req, res) => {
+const register = async (req, res) => {
   const { email, password, confirmPassword, name } = req.body;
 
   const schema = Joi.object({
@@ -33,7 +33,6 @@ const registerHandler = async (req, res) => {
       });
     }
 
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await userRef.set({
@@ -57,9 +56,8 @@ const registerHandler = async (req, res) => {
 };
 
 // Endpoint Login
-const loginHandler = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
-
 
   const schema = Joi.object({
     email: Joi.string().email().required(),
@@ -95,7 +93,6 @@ const loginHandler = async (req, res) => {
       });
     }
 
-
     const token = jwt.sign(
       { email: user.email, name: user.name },
       process.env.JWT_SECRET, 
@@ -120,7 +117,7 @@ const loginHandler = async (req, res) => {
   }
 };
 
-const getUserDataById = async (req, res) => {
+const getUserData = async (req, res) => {
   const id = req.params.id;
   try {
     const userSnapshot = await db.collection("users").doc(id).get();
@@ -145,7 +142,7 @@ const getUserDataById = async (req, res) => {
 };
 
 // Endpoint Logout
-const logoutHandler = (req, res) => {
+const logout = (req, res) => {
   res.clearCookie('token'); 
   res.status(200).json({
     status: 'success',
@@ -153,4 +150,4 @@ const logoutHandler = (req, res) => {
   });
 };
 
-module.exports = { registerHandler, loginHandler, getUserDataById, logoutHandler };
+module.exports = { register, login, getUserData, logout };

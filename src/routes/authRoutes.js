@@ -9,7 +9,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 
 // Route untuk mendapatkan data pengguna
-router.get('/user/:id', authController.getUserDataById);
+router.get('/user/:id', authController.getUserData);
 
 // Route untuk logout
 router.post('/logout', authController.logout);
